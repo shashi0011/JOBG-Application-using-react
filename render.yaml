@@ -1,0 +1,68 @@
+databases:
+  - name: jobg-db
+    plan: free
+    databaseName: jobg
+    user: jobg
+
+services:
+  # ---------------------------------------------------------------------
+  # Backend — Django, deployed as a Web Service
+  # ---------------------------------------------------------------------
+  - type: web
+    name: jobg-backend
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate"
+    startCommand: "gunicorn config.wsgi:application"
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com"
+      - key: JWT_EXPIRES_DAYS
+        value: "5"
+      - key: COOKIE_EXPIRE_DAYS
+        value: "5"
+      - key: COOKIE_SAMESITE
+        value: "None"
+      - key: COOKIE_SECURE
+        value: "True"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: jobg-db
+          property: connectionString
+      # Fill these in manually in the Render dashboard after both
+      # services exist — see the deploy guide for why.
+      - key: FRONTEND_URL
+        sync: false
+      - key: CLOUDINARY_CLIENT_NAME
+        sync: false
+      - key: CLOUDINARY_CLIENT_API
+        sync: false
+      - key: CLOUDINARY_CLIENT_SECRET
+        sync: false
+
+  # ---------------------------------------------------------------------
+  # Frontend — React (Vite), deployed as a Static Site
+  # ---------------------------------------------------------------------
+  - type: web
+    name: jobg-frontend
+    runtime: static
+    plan: free
+    rootDir: frontend
+    buildCommand: "npm ci && npm run build"
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      # Fill in with the backend's live URL after it deploys —
+      # see the deploy guide.
+      - key: VITE_API_URL
+        sync: false
