@@ -32,7 +32,6 @@ const Login = () => {
       setPassword("");
       setRole("");
       setIsAuthorized(true);
-      isAuthorized(true);
 
 
     } catch (error) {
