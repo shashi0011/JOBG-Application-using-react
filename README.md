@@ -8,8 +8,8 @@ upload — works exactly as before.
 ## Folder structure
 ```
 jobg_full_project/
-├── backend/     ← Django (replaces the old Node backend)
-└── frontend/    ← Your original React app, untouched
+├── backend/     ← Django 
+└── frontend/    ← React Js
 ```
 
 ## 1. Start the backend (Django) — port 4000
