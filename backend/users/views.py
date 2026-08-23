@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.exceptions import ValidationError
+from django.conf import settings
 
 
 from .serializers import UserSerializer
@@ -92,6 +93,7 @@ class LogoutView(APIView):
         )
         response.set_cookie(
             key="token", value="", max_age=0, httponly=True,
+            samesite=settings.COOKIE_SAMESITE, secure=settings.COOKIE_SECURE
         )
         return response
 
