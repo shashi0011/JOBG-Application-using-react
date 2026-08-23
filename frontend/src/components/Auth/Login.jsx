@@ -32,6 +32,9 @@ const Login = () => {
       setPassword("");
       setRole("");
       setIsAuthorized(true);
+      isAuthorized(true);
+
+
     } catch (error) {
         toast.error(error.response?.data?.message || "Login failed. Please try again.");
     }
