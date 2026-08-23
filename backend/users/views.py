@@ -93,7 +93,6 @@ class LogoutView(APIView):
         )
         response.set_cookie(
             key="token", value="", max_age=0, httponly=True,
-            samesite=settings.COOKIE_SAMESITE, secure=settings.COOKIE_SECURE
         )
         return response
 
